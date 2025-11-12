@@ -67,3 +67,42 @@ def dividir(datos: Operacion):
 def potencia(datos: Operacion):
     """Calcula la potencia"""
     return {"resultado": datos.a ** datos.b}
+
+@app.post("/raiz", status_code=status.HTTP_200_OK)
+def raiz(datos: Operacion):
+    """Calcula la raiz n-esima (datos.b) de un numero (datos.a)"""
+    if datos.b == 0:
+        raise HTTPException(
+            status code=status.HTTP_400_BAD_REQUEST,
+            detail="El indice de la raiz (datos.b) no puede ser cero"
+        )
+    return {"resultado": datos.a ** (1 / datos.b)}
+
+
+@app.post("/modulo", status_code=status.HTTP_200_OK)
+def modulo(datos: Operacion):
+    """Calcula el modulo (residuo) de la division entre datos.a y datos.b"""
+    if datos.b == 0:
+        raise HTTPException(
+            status code=status.HTTP_400_BAD_REQUEST,
+            detail="NO se puede calcula el modulo con un divisor (datos.b) de cero"
+        )
+    return {"resultado": datos.a % datos.b}
+
+@app.post("/logaritmo", status_code=status.HTTP_200_OK)
+def logaritmo(datos: Operacion):
+    """Calcula el logaritmo de datos.a en base datos.b"""
+    if datos.a <= 0:
+        raise HTTPException(
+            status code=status.HTTP_400_BAD_REQUEST,
+            detail="EL argumento (datos.a) debe ser mayor que cero "
+       )
+    if datos.b <= 0 or datos.b == 1:
+        raise HTTPException(
+            status code=status.HTTP_400_BAD_REQUEST,
+            detail="EL argumento (datos.b) debe ser mayor que cero y diferente de 1"
+       )
+    n=100000.0
+    ln_a= n*(datos.a**(1/n)-1)
+    ln_b= n*(datos.b**(1/n)-1)
+    return {"resultado": ln_a/ln_b}
