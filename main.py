@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-import math 
+import math
 
 app = FastAPI(title="API REST Calculadora")
 
@@ -107,6 +107,17 @@ def logaritmo(datos: Operacion):
     ln_a= n*(datos.a**(1/n)-1)
     ln_b= n*(datos.b**(1/n)-1)
     return {"resultado": ln_a/ln_b}
+
+
+@app.post("/factorial", status_code=status.HTTP_200_OK)
+def factorial(datos: OperacionTrigonometrica):
+    """Calcula el factorial"""
+    n = int(datos.a)
+    fact = 1
+    for i in range(1, n + 1):
+        fact *= i
+    return {"resultado": fact}
+
 
 class OperacionTrigonometrica(BaseModel):
     a: float
